@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 # LifeTrack AI
 
@@ -96,3 +97,36 @@ Vivek Kumar
 ---
 
 ⭐ If you like this project, don't forget to star the repository.
+=======
+# LifeTrack-AI
+AI-Powered Productivity &amp; Habit Analytics Progressive Web App
+# LifeTrack AI
+
+Banner
+
+Project Description
+
+Features
+
+Screenshots (Coming Soon)
+
+Technology Stack
+
+Architecture
+
+Folder Structure
+
+Installation
+
+Environment Variables
+
+Roadmap
+
+Documentation Links
+
+Contributing
+
+License
+
+Author
+>>>>>>> 809d60a (docs: update README)
