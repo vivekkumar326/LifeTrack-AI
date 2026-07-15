@@ -3,6 +3,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
+const habitRoutes = require("./routes/habit.routes");
 
 const authRoutes = require("./routes/auth.routes");
 
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -24,5 +26,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/habits", habitRoutes);
 
 module.exports = app;
