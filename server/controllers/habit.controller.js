@@ -1,16 +1,10 @@
 const Habit = require("../models/Habit");
 
+// Create Habit
 const createHabit = async (req, res) => {
   try {
-    const {
-      title,
-      description,
-      category,
-      frequency,
-      targetDays,
-    } = req.body;
+    const { title, description, category, frequency, targetDays } = req.body;
 
-    // Validation
     if (!title) {
       return res.status(400).json({
         success: false,
@@ -18,7 +12,6 @@ const createHabit = async (req, res) => {
       });
     }
 
-    // Create Habit
     const habit = await Habit.create({
       user: req.user.id,
       title,
@@ -31,6 +24,93 @@ const createHabit = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "Habit created successfully",
+      data: habit,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+// Get All Habits
+const getAllHabits = async (req, res) => {
+  try {
+    const habits = await Habit.find({
+      user: req.user.id,
+    }).sort({
+      createdAt: -1,
+    });
+
+    return res.status(200).json({
+      success: true,
+      count: habits.length,
+      data: habits,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+// Get Single Habit
+const getHabitById = async (req, res) => {
+  try {
+    const habit = await Habit.findOne({
+      _id: req.params.id,
+      user: req.user.id,
+    });
+
+    if (!habit) {
+      return res.status(404).json({
+        success: false,
+        message: "Habit not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: habit,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+// Update Habit
+const updateHabit = async (req, res) => {
+  try {
+    const habit = await Habit.findOne({
+      _id: req.params.id,
+      user: req.user.id,
+    });
+
+    if (!habit) {
+      return res.status(404).json({
+        success: false,
+        message: "Habit not found",
+      });
+    }
+
+    Object.assign(habit, req.body);
+
+    await habit.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Habit updated successfully",
       data: habit,
     });
 
@@ -46,4 +126,7 @@ const createHabit = async (req, res) => {
 
 module.exports = {
   createHabit,
+  getAllHabits,
+  getHabitById,
+  updateHabit,
 };
