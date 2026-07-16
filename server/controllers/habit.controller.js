@@ -1,9 +1,17 @@
 const Habit = require("../models/Habit");
 
+// =======================
 // Create Habit
+// =======================
 const createHabit = async (req, res) => {
   try {
-    const { title, description, category, frequency, targetDays } = req.body;
+    const {
+      title,
+      description,
+      category,
+      frequency,
+      targetDays,
+    } = req.body;
 
     if (!title) {
       return res.status(400).json({
@@ -36,7 +44,9 @@ const createHabit = async (req, res) => {
   }
 };
 
+// =======================
 // Get All Habits
+// =======================
 const getAllHabits = async (req, res) => {
   try {
     const habits = await Habit.find({
@@ -60,7 +70,9 @@ const getAllHabits = async (req, res) => {
   }
 };
 
+// =======================
 // Get Single Habit
+// =======================
 const getHabitById = async (req, res) => {
   try {
     const habit = await Habit.findOne({
@@ -89,7 +101,9 @@ const getHabitById = async (req, res) => {
   }
 };
 
+// =======================
 // Update Habit
+// =======================
 const updateHabit = async (req, res) => {
   try {
     const habit = await Habit.findOne({
@@ -104,7 +118,23 @@ const updateHabit = async (req, res) => {
       });
     }
 
-    Object.assign(habit, req.body);
+    const {
+      title,
+      description,
+      category,
+      frequency,
+      targetDays,
+      completed,
+      streak,
+    } = req.body;
+
+    if (title !== undefined) habit.title = title;
+    if (description !== undefined) habit.description = description;
+    if (category !== undefined) habit.category = category;
+    if (frequency !== undefined) habit.frequency = frequency;
+    if (targetDays !== undefined) habit.targetDays = targetDays;
+    if (completed !== undefined) habit.completed = completed;
+    if (streak !== undefined) habit.streak = streak;
 
     await habit.save();
 
@@ -112,6 +142,37 @@ const updateHabit = async (req, res) => {
       success: true,
       message: "Habit updated successfully",
       data: habit,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+// Delete Habit
+const deleteHabit = async (req, res) => {
+  try {
+    const habit = await Habit.findOne({
+      _id: req.params.id,
+      user: req.user.id,
+    });
+
+    if (!habit) {
+      return res.status(404).json({
+        success: false,
+        message: "Habit not found",
+      });
+    }
+
+    await Habit.findByIdAndDelete(req.params.id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Habit deleted successfully",
     });
 
   } catch (error) {
@@ -129,4 +190,5 @@ module.exports = {
   getAllHabits,
   getHabitById,
   updateHabit,
+  deleteHabit,
 };
