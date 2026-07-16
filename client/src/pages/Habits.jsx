@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import HabitForm from "../components/habits/HabitForm";
 import HabitList from "../components/habits/HabitList";
+import DashboardLayout from "../layouts/DashboardLayout";
 
 import {
     getHabits,
@@ -117,7 +118,7 @@ function Habits() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-100 p-8">
+        <DashboardLayout>
 
             <h1 className="text-4xl font-bold mb-8">
                 My Habits
@@ -138,7 +139,8 @@ function Habits() {
                 handleEdit={handleEdit}
             />
 
-        </div>
+        </DashboardLayout>
+    
     );
 }
 
