@@ -1,4 +1,5 @@
 const Habit = require("../models/Habit");
+const HabitHistory = require("../models/HabitHistory");
 
 // =======================
 // Create Habit
@@ -184,11 +185,54 @@ const deleteHabit = async (req, res) => {
     });
   }
 };
+// Complete Habit
+const completeHabit = async (req, res) => {
+  try {
+    const habit = await Habit.findOne({
+      _id: req.params.id,
+      user: req.user.id,
+    });
 
+    if (!habit) {
+      return res.status(404).json({
+        success: false,
+        message: "Habit not found",
+      });
+    }
+
+    habit.completed = true;
+    habit.streak += 1;
+
+    await habit.save();
+
+    // Save History
+    await HabitHistory.create({
+      user: req.user.id,
+      habit: habit._id,
+      date: new Date(),
+      completed: true,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Habit completed successfully",
+      data: habit,
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
 module.exports = {
   createHabit,
   getAllHabits,
   getHabitById,
   updateHabit,
   deleteHabit,
+  completeHabit,
 };

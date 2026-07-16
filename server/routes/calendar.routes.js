@@ -5,9 +5,9 @@ const router = express.Router();
 const authMiddleware = require("../middleware/auth.middleware");
 
 const {
-  getAnalytics,
-} = require("../controllers/analytics.controller");
+  getCalendar,
+} = require("../controllers/calendar.controller");
 
-router.get("/", authMiddleware, getAnalytics);
+router.get("/", authMiddleware, getCalendar);
 
 module.exports = router;

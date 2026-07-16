@@ -1,6 +1,6 @@
 const Habit = require("../models/Habit");
 
-const getAnalytics = async (req, res) => {
+const getDashboard = async (req, res) => {
   try {
     const habits = await Habit.find({
       user: req.user.id,
@@ -12,28 +12,22 @@ const getAnalytics = async (req, res) => {
       habit => habit.completed
     ).length;
 
-    const pendingHabits = totalHabits - completedHabits;
+    const pendingHabits =
+      totalHabits - completedHabits;
 
     const completionRate =
       totalHabits === 0
         ? 0
-        : Math.round((completedHabits / totalHabits) * 100);
+        : Math.round(
+            (completedHabits / totalHabits) * 100
+          );
 
-    // Category-wise Analytics
-    const categoryWise = {};
-
-    habits.forEach((habit) => {
-      if (!categoryWise[habit.category]) {
-        categoryWise[habit.category] = 0;
-      }
-
-      categoryWise[habit.category]++;
-    });
-
-    const categoryData = Object.keys(categoryWise).map(category => ({
-      category,
-      count: categoryWise[category],
-    }));
+    const recentHabits = habits
+      .sort(
+        (a, b) =>
+          b.createdAt - a.createdAt
+      )
+      .slice(0, 5);
 
     return res.status(200).json({
       success: true,
@@ -42,7 +36,7 @@ const getAnalytics = async (req, res) => {
         completedHabits,
         pendingHabits,
         completionRate,
-        categoryWise: categoryData,
+        recentHabits,
       },
     });
 
@@ -54,10 +48,9 @@ const getAnalytics = async (req, res) => {
       success: false,
       message: "Internal Server Error",
     });
-
   }
 };
 
 module.exports = {
-  getAnalytics,
+  getDashboard,
 };

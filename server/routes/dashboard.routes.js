@@ -5,9 +5,9 @@ const router = express.Router();
 const authMiddleware = require("../middleware/auth.middleware");
 
 const {
-  getAnalytics,
-} = require("../controllers/analytics.controller");
+  getDashboard,
+} = require("../controllers/dashboard.controller");
 
-router.get("/", authMiddleware, getAnalytics);
+router.get("/", authMiddleware, getDashboard);
 
 module.exports = router;

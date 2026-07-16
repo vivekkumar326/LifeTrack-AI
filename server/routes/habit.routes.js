@@ -10,6 +10,7 @@ const {
   getHabitById,
   updateHabit,
   deleteHabit,
+  completeHabit,
 } = require("../controllers/habit.controller");
 
 router.post("/", authMiddleware, createHabit);
@@ -20,5 +21,6 @@ router.get("/:id", authMiddleware, getHabitById);
 
 router.put("/:id", authMiddleware, updateHabit);
 router.delete("/:id", authMiddleware, deleteHabit);
+router.patch("/:id/complete", authMiddleware, completeHabit);
 
 module.exports = router;
