@@ -1,54 +1,83 @@
+import { useEffect, useState } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
+import { getDashboard } from "../services/dashboard.service";
+import StatsCard from "../components/dashboard/StatsCard";
+import ProgressChart from "../components/dashboard/ProgressChart";
+import RecentHabits from "../components/dashboard/RecentHabits";
 
 function Dashboard() {
+ 
+    const [stats, setStats] = useState({
+        totalHabits: 0,
+        completedHabits: 0,
+        pendingHabits: 0,
+        completionRate: 0,
+        recentHabits: [],
+    });
+    const weeklyData = [
+        { day: "Mon", completed: 2 },
+        { day: "Tue", completed: 1 },
+        { day: "Wed", completed: 3 },
+        { day: "Thu", completed: 2 },
+        { day: "Fri", completed: 4 },
+        { day: "Sat", completed: 5 },
+        { day: "Sun", completed: 3 },
+    ];
+
+    useEffect(() => {
+        loadDashboard();
+    }, []);
+
+    const loadDashboard = async () => {
+        try {
+            const response = await getDashboard();
+            setStats(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <DashboardLayout>
 
             <h1 className="text-4xl font-bold mb-8">
                 Dashboard
             </h1>
-
             <div className="grid grid-cols-4 gap-6">
 
-                <div className="bg-white rounded-xl shadow p-6">
-                    <h2 className="text-lg text-gray-500">
-                        Total Habits
-                    </h2>
+                <StatsCard
+                    title="Total Habits"
+                    value={stats.totalHabits}
+                />
 
-                    <p className="text-4xl font-bold mt-3">
-                        12
-                    </p>
-                </div>
+                <StatsCard
+                    title="Completed"
+                    value={stats.completedHabits}
+                    color="text-green-600"
+                />
 
-                <div className="bg-white rounded-xl shadow p-6">
-                    <h2 className="text-lg text-gray-500">
-                        Completed
-                    </h2>
+                <StatsCard
+                    title="Pending"
+                    value={stats.pendingHabits}
+                    color="text-red-600"
+                />
 
-                    <p className="text-4xl font-bold mt-3 text-green-600">
-                        8
-                    </p>
-                </div>
+                <StatsCard
+                    title="Completion Rate"
+                    value={`${stats.completionRate}%`}
+                    color="text-blue-600"
+                />
 
-                <div className="bg-white rounded-xl shadow p-6">
-                    <h2 className="text-lg text-gray-500">
-                        Pending
-                    </h2>
+            </div>
+            <div className="grid grid-cols-2 gap-6 mt-8">
 
-                    <p className="text-4xl font-bold mt-3 text-red-600">
-                        4
-                    </p>
-                </div>
+                <ProgressChart
+                    data={weeklyData}
+                />
 
-                <div className="bg-white rounded-xl shadow p-6">
-                    <h2 className="text-lg text-gray-500">
-                        Completion Rate
-                    </h2>
-
-                    <p className="text-4xl font-bold mt-3 text-blue-600">
-                        67%
-                    </p>
-                </div>
+                <RecentHabits
+                    habits={stats.recentHabits}
+                />
 
             </div>
 

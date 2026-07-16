@@ -1,3 +1,6 @@
+import Button from "../ui/Button";
+import Input from "../ui/Input";
+
 function HabitForm({
     formData,
     handleChange,
@@ -14,72 +17,82 @@ function HabitForm({
                 {isEditing ? "Edit Habit" : "Add New Habit"}
             </h2>
 
-            <input
-                type="text"
+            {/* Habit Title */}
+            <Input
                 name="title"
                 placeholder="Habit Title"
                 value={formData.title}
                 onChange={handleChange}
-                className="border rounded p-3 w-full mb-3"
-                required
             />
 
-            <input
-                type="text"
+            <div className="mb-3"></div>
+
+            {/* Description */}
+            <Input
                 name="description"
                 placeholder="Description"
                 value={formData.description}
                 onChange={handleChange}
-                className="border rounded p-3 w-full mb-3"
             />
 
-            <input
-                type="text"
+            <div className="mb-3"></div>
+
+            {/* Category */}
+            <select
                 name="category"
-                placeholder="Category"
+                required
                 value={formData.category}
                 onChange={handleChange}
-                className="border rounded p-3 w-full mb-3"
-            />
+                className="w-full border rounded-xl p-3 mb-3"
+            >
+                <option value="">Select Category</option>
+                <option value="Health">Health</option>
+                <option value="Fitness">Fitness</option>
+                <option value="Study">Study</option>
+                <option value="Work">Work</option>
+                <option value="Finance">Finance</option>
+                <option value="Personal">Personal</option>
+                <option value="Other">Other</option>
+            </select>
 
+            {/* Frequency */}
             <select
                 name="frequency"
                 value={formData.frequency}
                 onChange={handleChange}
-                className="border rounded p-3 w-full mb-3"
+                className="w-full border rounded-xl p-3 mb-3"
             >
-                <option>Daily</option>
-                <option>Weekly</option>
-                <option>Monthly</option>
+                <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Monthly">Monthly</option>
             </select>
 
-            <input
-                type="number"
+            {/* Target Days */}
+            <Input
                 name="targetDays"
+                type="number"
+                placeholder="Target Days"
                 value={formData.targetDays}
                 onChange={handleChange}
-                className="border rounded p-3 w-full mb-4"
             />
 
-            <div className="flex gap-3">
-
-                <button
+            <div className="mt-5 flex gap-3">
+                <Button
                     type="submit"
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded"
+                    variant="primary"
                 >
                     {isEditing ? "Update Habit" : "Create Habit"}
-                </button>
+                </Button>
 
                 {isEditing && (
-                    <button
+                    <Button
                         type="button"
+                        variant="secondary"
                         onClick={handleCancel}
-                        className="bg-gray-500 hover:bg-gray-600 text-white px-5 py-3 rounded"
                     >
                         Cancel
-                    </button>
+                    </Button>
                 )}
-
             </div>
         </form>
     );
