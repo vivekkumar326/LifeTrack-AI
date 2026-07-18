@@ -35,14 +35,24 @@ const createHabit = async (req, res) => {
       message: "Habit created successfully",
       data: habit,
     });
-  } catch (error) {
-    console.error(error);
+ } catch (error) {
+  console.error(error);
 
-    return res.status(500).json({
+  // Mongoose Validation Error
+  if (error.name === "ValidationError") {
+    const firstError = Object.values(error.errors)[0].message;
+
+    return res.status(400).json({
       success: false,
-      message: "Internal Server Error",
+      message: firstError,
     });
   }
+
+  return res.status(500).json({
+    success: false,
+    message: "Internal Server Error",
+  });
+}
 };
 
 // =======================
@@ -145,13 +155,22 @@ const updateHabit = async (req, res) => {
       data: habit,
     });
   } catch (error) {
-    console.error(error);
+  console.error(error);
 
-    return res.status(500).json({
+  if (error.name === "ValidationError") {
+    const firstError = Object.values(error.errors)[0].message;
+
+    return res.status(400).json({
       success: false,
-      message: "Internal Server Error",
+      message: firstError,
     });
   }
+
+  return res.status(500).json({
+    success: false,
+    message: "Internal Server Error",
+  });
+}
 };
 
 // Delete Habit

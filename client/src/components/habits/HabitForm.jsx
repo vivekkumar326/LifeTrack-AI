@@ -7,6 +7,7 @@ function HabitForm({
     handleSubmit,
     isEditing,
     handleCancel,
+    loading,
 }) {
     return (
         <form
@@ -80,8 +81,11 @@ function HabitForm({
                 <Button
                     type="submit"
                     variant="primary"
+                    disabled={loading}
                 >
-                    {isEditing ? "Update Habit" : "Create Habit"}
+                    {loading
+                        ? (isEditing ? "Updating..." : "Creating...")
+                        : (isEditing ? "Update Habit" : "Create Habit")}
                 </Button>
 
                 {isEditing && (

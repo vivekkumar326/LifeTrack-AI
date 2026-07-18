@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import HabitForm from "../components/habits/HabitForm";
 import HabitList from "../components/habits/HabitList";
 import DashboardLayout from "../layouts/DashboardLayout";
+import toast from "react-hot-toast";
 
 import {
     getHabits,
@@ -15,6 +16,7 @@ import {
 function Habits() {
     const [habits, setHabits] = useState([]);
     const [editingId, setEditingId] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         title: "",
@@ -27,7 +29,6 @@ function Habits() {
     useEffect(() => {
         loadHabits();
     }, []);
-
     const loadHabits = async () => {
         try {
             const response = await getHabits();
@@ -59,36 +60,43 @@ function Habits() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        setLoading(true);
+        
+
         try {
             if (editingId) {
                 await updateHabit(editingId, formData);
+                toast.success("Habit updated successfully");
             } else {
                 await createHabit(formData);
+                toast.success("Habit created successfully");
             }
 
             resetForm();
             loadHabits();
 
         } catch (error) {
-            console.error("Full Error:", error);
+            console.error(error);
 
             if (error.response) {
-                console.log("Backend Response:", error.response.data);
-                console.log("Status:", error.response.status);
-
-                alert(error.response.data.message || "Backend Error");
+                toast.error(error.response.data.message || "Backend Error");
             } else {
-                alert(error.message);
+                toast.error(error.message);
             }
+
+        } finally {
+            setLoading(false);
         }
     };
 
     const handleComplete = async (id) => {
         try {
             await completeHabit(id);
+            toast.success("Habit completed 🎉");
             loadHabits();
         } catch (error) {
             console.error(error);
+            toast.error("Failed to complete habit");
         }
     };
 
@@ -99,6 +107,7 @@ function Habits() {
 
         try {
             await deleteHabit(id);
+            toast.success("Habit deleted");
             loadHabits();
         } catch (error) {
             console.error(error);
@@ -130,6 +139,7 @@ function Habits() {
                 handleSubmit={handleSubmit}
                 isEditing={editingId !== null}
                 handleCancel={resetForm}
+                loading={loading}
             />
 
             <HabitList

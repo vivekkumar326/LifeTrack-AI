@@ -1,4 +1,5 @@
 const Habit = require("../models/Habit");
+const HabitHistory = require("../models/HabitHistory");
 
 const getAnalytics = async (req, res) => {
   try {
@@ -34,17 +35,48 @@ const getAnalytics = async (req, res) => {
       category,
       count: categoryWise[category],
     }));
+    // ================= Weekly Progress =================
 
-    return res.status(200).json({
-      success: true,
-      data: {
-        totalHabits,
-        completedHabits,
-        pendingHabits,
-        completionRate,
-        categoryWise: categoryData,
-      },
-    });
+const weekNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+const weeklyProgress = [];
+
+for (let i = 6; i >= 0; i--) {
+
+  const start = new Date();
+  start.setHours(0, 0, 0, 0);
+  start.setDate(start.getDate() - i);
+
+  const end = new Date(start);
+  end.setHours(23, 59, 59, 999);
+
+  const count = await HabitHistory.countDocuments({
+    user: req.user.id,
+    completed: true,
+    date: {
+      $gte: start,
+      $lte: end,
+    },
+  });
+
+  weeklyProgress.push({
+    day: weekNames[start.getDay()],
+    completed: count,
+  });
+
+}
+
+   return res.status(200).json({
+  success: true,
+  data: {
+    totalHabits,
+    completedHabits,
+    pendingHabits,
+    completionRate,
+    categoryWise: categoryData,
+    weeklyProgress,
+  },
+});
 
   } catch (error) {
 

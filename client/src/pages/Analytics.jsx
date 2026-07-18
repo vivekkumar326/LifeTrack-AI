@@ -4,7 +4,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import AnalyticsCard from "../components/analytics/AnalyticsCard";
 import CategoryPieChart from "../components/analytics/CategoryPieChart";
 import { getAnalytics } from "../services/analytics.service";
-
+import WeeklyProgressChart from "../components/analytics/WeeklyProgressChart";
 function Analytics() {
 
     const [stats, setStats] = useState({
@@ -13,6 +13,7 @@ function Analytics() {
         pendingHabits: 0,
         completionRate: 0,
         categoryWise: [],
+        weeklyProgress: [],
     });
 
     useEffect(() => {
@@ -61,6 +62,13 @@ function Analytics() {
                 />
 
             </div>
+
+            <div className="mt-8 mb-8">
+                <WeeklyProgressChart
+                    data={stats.weeklyProgress}
+                />
+            </div>
+            
 
             <div className="grid grid-cols-2 gap-6 mt-8">
 
