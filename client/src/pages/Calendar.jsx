@@ -115,15 +115,30 @@ function Calendar() {
                         day === today.getDate() &&
                         currentDate.getMonth() === today.getMonth() &&
                         currentDate.getFullYear() === today.getFullYear();
+                    const currentDateString = `${currentDate.getFullYear()}-${String(
+                        currentDate.getMonth() + 1
+                    ).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+                    const isCompleted = history.some((item) => {
+                        const historyDate = new Date(item.date);
+
+                        const formattedDate = `${historyDate.getFullYear()}-${String(
+                            historyDate.getMonth() + 1
+                        ).padStart(2, "0")}-${String(historyDate.getDate()).padStart(2, "0")}`;
+
+                        return formattedDate === currentDateString;
+                    });
 
                     return (
                         <div
                             key={index}
                             className={`h-24 rounded-lg border transition flex items-start justify-end p-2 ${isToday
-                                ? "bg-blue-600 border-blue-700 text-white ring-2 ring-blue-300"
-                                    : isCurrentMonth
-                                        ? "bg-white hover:bg-gray-50"
-                                        : "bg-gray-100"
+                                    ? "bg-blue-600 border-blue-700 text-white ring-2 ring-blue-300"
+                                    : isCompleted
+                                        ? "bg-green-100 border-green-500"
+                                        : isCurrentMonth
+                                            ? "bg-white hover:bg-gray-50"
+                                            : "bg-gray-100"
                                 }`}
                         >
                             <span
