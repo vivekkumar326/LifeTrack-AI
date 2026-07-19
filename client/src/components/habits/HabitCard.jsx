@@ -47,15 +47,12 @@ function HabitCard({
 
             <div className="flex gap-3 mt-6">
 
-                {!habit.completed && (
-                    <Button
-                        variant="success"
-                        onClick={() => handleComplete(habit._id)}
-                    >
-                        Complete
-                    </Button>
-                )}
-
+                <Button
+                    variant={habit.completed ? "warning" : "success"}
+                    onClick={() => handleComplete(habit._id)}
+                >
+                    {habit.completed ? "Mark Incomplete" : "Complete"}
+                </Button>
                 <Button
                     variant="primary"
                     onClick={() => handleEdit(habit)}

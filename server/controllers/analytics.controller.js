@@ -35,6 +35,12 @@ const getAnalytics = async (req, res) => {
       category,
       count: categoryWise[category],
     }));
+    // ================= Longest Streak =================
+
+const longestStreak =
+  habits.length === 0
+    ? 0
+    : Math.max(...habits.map((habit) => habit.streak));
     // ================= Weekly Progress =================
 
 const weekNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -68,14 +74,15 @@ for (let i = 6; i >= 0; i--) {
 
    return res.status(200).json({
   success: true,
-  data: {
-    totalHabits,
-    completedHabits,
-    pendingHabits,
-    completionRate,
-    categoryWise: categoryData,
-    weeklyProgress,
-  },
+ data: {
+  totalHabits,
+  completedHabits,
+  pendingHabits,
+  completionRate,
+  longestStreak,
+  categoryWise: categoryData,
+  weeklyProgress,
+},
 });
 
   } catch (error) {

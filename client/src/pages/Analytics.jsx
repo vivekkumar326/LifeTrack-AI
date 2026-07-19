@@ -14,6 +14,7 @@ function Analytics() {
         completionRate: 0,
         categoryWise: [],
         weeklyProgress: [],
+        longestStreak: 0,
     });
 
     useEffect(() => {
@@ -36,7 +37,7 @@ function Analytics() {
                 Analytics
             </h1>
 
-            <div className="grid grid-cols-4 gap-6">
+            <div className="grid grid-cols-5 gap-6">
 
                 <AnalyticsCard
                     title="Total Habits"
@@ -59,6 +60,11 @@ function Analytics() {
                     title="Completion Rate"
                     value={`${stats.completionRate}%`}
                     color="text-blue-600"
+                />
+                <AnalyticsCard
+                    title="Longest Streak"
+                    value={stats.longestStreak}
+                    color="text-orange-600"
                 />
 
             </div>

@@ -218,19 +218,25 @@ const completeHabit = async (req, res) => {
         message: "Habit not found",
       });
     }
+// Toggle completion
+habit.completed = !habit.completed;
 
-    habit.completed = true;
-    habit.streak += 1;
+// Update streak
+if (habit.completed) {
+  habit.streak += 1;
+} else {
+  habit.streak = Math.max(0, habit.streak - 1);
+}
 
-    await habit.save();
+await habit.save();
 
-    // Save History
-    await HabitHistory.create({
-      user: req.user.id,
-      habit: habit._id,
-      date: new Date(),
-      completed: true,
-    });
+// Save History
+await HabitHistory.create({
+  user: req.user.id,
+  habit: habit._id,
+  date: new Date(),
+  completed: habit.completed,
+});
 
     return res.status(200).json({
       success: true,
