@@ -5,6 +5,8 @@ import AnalyticsCard from "../components/analytics/AnalyticsCard";
 import CategoryPieChart from "../components/analytics/CategoryPieChart";
 import { getAnalytics } from "../services/analytics.service";
 import WeeklyProgressChart from "../components/analytics/WeeklyProgressChart";
+import MonthlyHeatmap from "../components/analytics/MonthlyHeatmap";
+
 function Analytics() {
 
     const [stats, setStats] = useState({
@@ -14,7 +16,12 @@ function Analytics() {
         completionRate: 0,
         categoryWise: [],
         weeklyProgress: [],
+        heatmapData: [],
         longestStreak: 0,
+        completedToday: 0,
+        bestHabit: null,
+        needsAttention: 0,
+        totalCompletions: 0,
     });
 
     useEffect(() => {
@@ -36,8 +43,7 @@ function Analytics() {
             <h1 className="text-4xl font-bold mb-8">
                 Analytics
             </h1>
-
-            <div className="grid grid-cols-5 gap-6">
+            <div className="grid grid-cols-9 gap-6">
 
                 <AnalyticsCard
                     title="Total Habits"
@@ -66,6 +72,30 @@ function Analytics() {
                     value={stats.longestStreak}
                     color="text-orange-600"
                 />
+                <AnalyticsCard
+                    title="Completed Today"
+                    value={stats.completedToday}
+                    color="text-purple-600"
+                />
+                <AnalyticsCard
+                    title="Best Habit"
+                    value={
+                        stats.bestHabit
+                            ? `${stats.bestHabit.title} (${stats.bestHabit.streak})`
+                            : "N/A"
+                    }
+                    color="text-yellow-600"
+                />
+                <AnalyticsCard
+                    title="Needs Attention"
+                    value={stats.needsAttention}
+                    color="text-red-500"
+                />
+                <AnalyticsCard
+                    title="Total Completions"
+                    value={stats.totalCompletions}
+                    color="text-indigo-600"
+                />
 
             </div>
 
@@ -74,6 +104,7 @@ function Analytics() {
                     data={stats.weeklyProgress}
                 />
             </div>
+            <MonthlyHeatmap data={stats.heatmapData} />
             
 
             <div className="grid grid-cols-2 gap-6 mt-8">
